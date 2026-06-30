@@ -13,18 +13,31 @@ const routes = {
 function render() {
     const app = document.querySelector("#app");
 
-    if (!app) {
-        console.error("#app element not found.");
-        return;
-    }
+    if (!app) return;
 
-    const path = window.location.hash.replace("#", "") || "/";
+    const path = window.location.pathname;
     const page = routes[path] || HomePage;
 
     app.innerHTML = page();
 }
 
 export function router() {
-    window.addEventListener("hashchange", render);
+
+    document.addEventListener("click", (e) => {
+
+        const link = e.target.closest("[data-link]");
+
+        if (!link) return;
+
+        e.preventDefault();
+
+        history.pushState({}, "", link.getAttribute("href"));
+
+        render();
+
+    });
+
+    window.addEventListener("popstate", render);
+
     render();
 }
