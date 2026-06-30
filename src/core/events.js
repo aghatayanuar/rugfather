@@ -1,0 +1,1 @@
+const l={};export const on=(e,c)=>(l[e]??=[]).push(c);export const emit=(e,p)=>(l[e]||[]).forEach(f=>f(p));
