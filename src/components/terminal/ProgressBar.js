@@ -1,14 +1,25 @@
-export function ProgressBar(progress){
+export function ProgressBar(progress = 0) {
 
-return `
+    return `
 
-<div class="progress">
+<div class="progress-container">
 
-<div
-class="progress-fill"
-style="width:${progress}%">
+    <div class="progress-header">
 
-</div>
+        <span>SCAN PROGRESS</span>
+
+        <span>${progress}%</span>
+
+    </div>
+
+    <div class="progress-track">
+
+        <div
+            class="progress-fill"
+            style="width:${progress}%">
+        </div>
+
+    </div>
 
 </div>
 

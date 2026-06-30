@@ -1,18 +1,8 @@
-export function TerminalLog(logs){
+export function TerminalLog() {
 
     return `
 
 <div class="terminal-log">
-
-${logs.map(log=>`
-
-<div class="log-row">
-
-${log}
-
-</div>
-
-`).join("")}
 
 </div>
 
