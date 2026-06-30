@@ -2,30 +2,43 @@ import { emit } from "../core/events";
 import { sleep } from "../utils/sleep";
 
 const SCAN_STEPS = [
+
     {
+        status: "CONNECTING",
         progress: 15,
-        message: "Connecting to Solana RPC..."
+        message: "Connecting to Helius RPC..."
     },
+
     {
+        status: "METADATA",
         progress: 30,
-        message: "Reading token metadata..."
+        message: "Reading Token Metadata..."
     },
+
     {
+        status: "LIQUIDITY",
         progress: 50,
-        message: "Checking liquidity..."
+        message: "Checking Liquidity..."
     },
+
     {
+        status: "HOLDERS",
         progress: 70,
-        message: "Analyzing holder distribution..."
+        message: "Analyzing Holder Distribution..."
     },
+
     {
+        status: "RUGCHECK",
         progress: 85,
-        message: "Inspecting developer wallet..."
+        message: "Running RugCheck Engine..."
     },
+
     {
+        status: "AI",
         progress: 100,
-        message: "Generating AI report..."
+        message: "Generating AI Intelligence..."
     }
+
 ];
 
 export async function startScan(contractAddress = "") {
@@ -35,6 +48,7 @@ export async function startScan(contractAddress = "") {
     for (const step of SCAN_STEPS) {
 
         emit("log", step.message);
+        emit("status", step.status);
 
         await sleep(700);
 
@@ -49,5 +63,6 @@ export async function startScan(contractAddress = "") {
         holders: "Healthy Distribution"
     });
 
+    emit("status", "COMPLETE");
     emit("scan:finish");
 }

@@ -1,25 +1,21 @@
 export const state = {
 
-    scanning:false,
+    view: "idle",
 
-    progress:0,
+    scanning: false,
 
-    contract:"",
+    progress: 0,
 
-    report:null,
+    contract: "",
 
-    logs:[],
+    report: null,
 
-    risk:null,
-
-    wallet:null,
-
-    liquidity:null
+    logs: []
 
 };
 
-export function setState(key,value){
+export function setState(key, value) {
 
-    state[key]=value;
+    state[key] = value;
 
 }
