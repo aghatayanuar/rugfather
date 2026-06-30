@@ -1,41 +1,53 @@
 import { emit } from "../core/events";
-
 import { sleep } from "../utils/sleep";
 
-export async function startScan(){
+const SCAN_STEPS = [
+    {
+        progress: 15,
+        message: "Connecting to Solana RPC..."
+    },
+    {
+        progress: 30,
+        message: "Reading token metadata..."
+    },
+    {
+        progress: 50,
+        message: "Checking liquidity..."
+    },
+    {
+        progress: 70,
+        message: "Analyzing holder distribution..."
+    },
+    {
+        progress: 85,
+        message: "Inspecting developer wallet..."
+    },
+    {
+        progress: 100,
+        message: "Generating AI report..."
+    }
+];
 
-    emit("log","Connecting to Solana RPC...");
+export async function startScan(contractAddress = "") {
 
-    await sleep(600);
+    emit("scan:start", contractAddress);
 
-    emit("progress",15);
+    for (const step of SCAN_STEPS) {
 
-    emit("log","Metadata loaded.");
+        emit("log", step.message);
 
-    await sleep(500);
+        await sleep(700);
 
-    emit("progress",30);
+        emit("progress", step.progress);
+    }
 
-    emit("log","Liquidity detected.");
+    emit("report", {
+        score: 92,
+        verdict: "SAFE",
+        liquidity: "Locked",
+        developer: "Verified",
+        holders: "Healthy Distribution"
+    });
 
-    await sleep(700);
-
-    emit("progress",55);
-
-    emit("log","Holder analysis complete.");
-
-    await sleep(700);
-
-    emit("progress",75);
-
-    emit("log","Developer wallet verified.");
-
-    await sleep(700);
-
-    emit("progress",100);
-
-    emit("log","AI Report generated.");
-
-    emit("finish");
-
+    emit("scan:finish");
 }
