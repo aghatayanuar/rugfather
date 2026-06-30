@@ -491,3 +491,73 @@ border-bottom:1px solid rgba(255,255,255,.05);
     margin-left:8px;
 
 }
+
+.terminal-badge{
+
+    padding:6px 16px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    transition:.3s;
+
+}
+
+.connecting{
+
+    color:#45b6ff;
+
+    background:#11283b;
+
+}
+
+.metadata{
+
+    color:#ffd166;
+
+    background:#3a3212;
+
+}
+
+.liquidity{
+
+    color:#43ff64;
+
+    background:#15351a;
+
+}
+
+#terminal-status{
+
+    color:#52ff52;
+
+    animation:pulse 1s infinite;
+
+}
+
+@keyframes pulse{
+
+    0%{
+
+        opacity:.4;
+
+    }
+
+    50%{
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        opacity:.4;
+
+    }
+
+}

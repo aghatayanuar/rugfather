@@ -8,13 +8,18 @@ export function ProgressBar(progress = 0) {
 
         <span>SCAN PROGRESS</span>
 
-        <span>${progress}%</span>
+        <span id="progress-text">
+
+            ${progress}%
+
+        </span>
 
     </div>
 
     <div class="progress-track">
 
         <div
+            id="progress-fill"
             class="progress-fill"
             style="width:${progress}%">
         </div>

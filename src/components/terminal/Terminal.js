@@ -1,99 +1,45 @@
+import { state, setState } from "../../core/state";
+
+import { IdleView } from "./IdleView";
+import { ScanningView } from "./ScanningView";
+import { ResultView } from "./ResultView";
+
 import { startScan } from "../../services/scanner";
+
 import { on } from "../../core/events";
 
-import { ProgressBar } from "./ProgressBar";
-import { TerminalLog } from "./TerminalLog";
-import { Report } from "./Report";
-import { countUp } from "../../utils/countUp";
 import { typewriter } from "../../utils/typewriter";
 
+import { countUp } from "../../utils/countUp";
+
 let initialized = false;
-const logs = [];
 
 export function Terminal() {
 
     setTimeout(initTerminal, 0);
 
-    return `
+    switch (state.view) {
 
-<div class="scan-terminal">
+        case "scanning":
+            return ScanningView();
 
-    <div class="terminal-top">
+        case "result":
+            return ResultView(state.report);
 
-        <div class="green"></div>
-        <div class="yellow"></div>
-        <div class="red"></div>
+        default:
+            return IdleView();
 
-        <span>THE RUGFATHER TERMINAL</span>
+    }
 
-    </div>
+}
 
-    <div class="terminal-body">
+function renderTerminal() {
 
-        <div class="terminal-status">
+    const container = document.querySelector(".scan-page");
 
-            <span>STATUS</span>
+    if (!container) return;
 
-            <strong id="terminal-status">
-
-                READY
-
-            </strong>
-
-        </div>
-
-        <h1>
-
-            Contract Intelligence
-
-        </h1>
-
-        <p>
-
-            Paste any Solana Contract Address below.
-
-            The Family will investigate.
-
-        </p>
-
-        <input
-            id="contract-input"
-            class="contract-input"
-            placeholder="Paste Solana Contract Address"
-        >
-
-        <button
-            id="analyze-btn"
-            class="analyze-btn"
-        >
-
-            ANALYZE CONTRACT
-
-        </button>
-
-        <div id="terminal-progress">
-
-            ${ProgressBar(0)}
-
-        </div>
-
-        <div id="terminal-log">
-
-            ${TerminalLog([])}
-
-        </div>
-
-        <div id="scan-report">
-
-            ${Report(null)}
-
-        </div>
-
-    </div>
-
-</div>
-
-`;
+    container.innerHTML = Terminal();
 
 }
 
@@ -103,45 +49,78 @@ function initTerminal() {
 
     initialized = true;
 
-    const btn = document.getElementById("analyze-btn");
+    on("scan:start", () => {
 
-    const input = document.getElementById("contract-input");
+        setState("view", "scanning");
 
-    const progress = document.getElementById("terminal-progress");
+        renderTerminal();
 
-    const log = document.getElementById("terminal-log");
+    });
 
-    const report = document.getElementById("scan-report");
+    on("report", (report) => {
 
-    const status = document.getElementById("terminal-status");
+        setState("report", report);
 
-    btn.onclick = () => {
+    });
 
-        logs.length = 0;
+    on("scan:finish", async () => {
 
-        progress.innerHTML = ProgressBar(0);
+        setState("view", "result");
 
-        log.innerHTML = TerminalLog([]);
+        renderTerminal();
 
-        report.innerHTML = "";
+        const score = document.getElementById("report-score");
 
-        status.textContent = "SCANNING";
+        if (score && state.report) {
 
-        btn.disabled = true;
+            await countUp(score, state.report.score);
 
-        startScan(input.value);
+        }
 
-    };
+    });
+
+    on("progress", (value) => {
+
+        const fill = document.getElementById("progress-fill");
+        const text = document.getElementById("progress-text");
+
+        if (fill) {
+
+            fill.style.width = value + "%";
+
+        }
+
+        if (text) {
+
+            text.textContent = value + "%";
+
+        }
+
+    });
+
+    on("status", (status) => {
+
+        const badge = document.getElementById("terminal-status");
+
+        if (!badge) return;
+
+        badge.textContent = status;
+
+        badge.className = "terminal-badge " + status.toLowerCase();
+
+    });
 
     on("log", async (text) => {
+
+        const terminal = document.querySelector(".terminal-log");
+
+        if (!terminal) return;
 
         const line = document.createElement("div");
 
         line.className = "log-line";
 
-        line.textContent = "> ";
-
-        log.querySelector(".terminal-log").appendChild(line);
+        terminal.appendChild(line);
 
         await typewriter(line, "> " + text);
 
@@ -149,35 +128,33 @@ function initTerminal() {
 
         ok.className = "log-ok";
 
-        ok.textContent = " ✓";
+        ok.textContent = "  ✓";
 
         line.appendChild(ok);
 
-        log.scrollTop = log.scrollHeight;
+        terminal.scrollTop = terminal.scrollHeight;
 
     });
 
-    on("progress", (value) => {
+    document.addEventListener("click", (e) => {
 
-        progress.innerHTML = ProgressBar(value);
+        if (e.target.id === "analyze-btn") {
 
-    });
+            const input = document.getElementById("contract-input");
 
-    on("report", async (data) => {
+            startScan(input.value);
 
-        report.innerHTML = Report(data);
+        }
 
-        const score = document.getElementById("report-score");
+        if (e.target.id === "scan-again") {
 
-        await countUp(score, data.score);
+            setState("view", "idle");
 
-    });
+            setState("report", null);
 
-    on("scan:finish", () => {
+            renderTerminal();
 
-        status.textContent = "COMPLETE";
-
-        btn.disabled = false;
+        }
 
     });
 

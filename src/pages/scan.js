@@ -5,14 +5,14 @@ export function ScanPage() {
 
     return `
 
-        ${Navbar()}
+${Navbar()}
 
-        <div class="scan-page">
+<div class="scan-page">
 
-            ${Terminal()}
+    ${Terminal()}
 
-        </div>
+</div>
 
-    `;
+`;
 
 }
