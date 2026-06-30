@@ -1,148 +1,18 @@
 import { Navbar } from "../components/navbar";
+import { Terminal } from "../components/terminal/Terminal";
 
 export function ScanPage() {
 
-return `
+    return `
 
-${Navbar()}
+        ${Navbar()}
 
-<div class="scan-page">
+        <div class="scan-page">
 
-<div class="scan-terminal">
+            ${Terminal()}
 
-<div class="terminal-top">
+        </div>
 
-<div class="green"></div>
-<div class="yellow"></div>
-<div class="red"></div>
-
-<span>
-
-THE RUGFATHER TERMINAL
-
-</span>
-
-</div>
-
-<div class="terminal-body">
-
-<div class="terminal-status">
-
-<span>
-
-STATUS
-
-</span>
-
-<strong>
-
-CONNECTED
-
-</strong>
-
-</div>
-
-<h1>
-
-Contract Intelligence
-
-</h1>
-
-<p>
-
-Paste any Solana Contract Address below.
-
-The Family will investigate.
-
-</p>
-
-<input
-id="contract-input"
-class="contract-input"
-placeholder="Paste Solana Contract Address">
-
-<button
-id="analyze-btn"
-class="analyze-btn">
-
-ANALYZE CONTRACT
-
-</button>
-
-<div class="system-status">
-
-<div class="status-row">
-
-<span>Metadata</span>
-
-<span id="status-meta">
-
-Waiting...
-
-</span>
-
-</div>
-
-<div class="status-row">
-
-<span>Liquidity</span>
-
-<span id="status-liquidity">
-
-Waiting...
-
-</span>
-
-</div>
-
-<div class="status-row">
-
-<span>Top Holders</span>
-
-<span id="status-holder">
-
-Waiting...
-
-</span>
-
-</div>
-
-<div class="status-row">
-
-<span>Developer Wallet</span>
-
-<span id="status-dev">
-
-Waiting...
-
-</span>
-
-</div>
-
-<div class="status-row">
-
-<span>AI Analysis</span>
-
-<span id="status-ai">
-
-Waiting...
-
-</span>
-
-</div>
-
-</div>
-
-<div id="scan-report">
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-`;
+    `;
 
 }
