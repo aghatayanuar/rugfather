@@ -1,6 +1,8 @@
 import { emit } from "../core/events";
 import { sleep } from "../utils/sleep";
 
+import calculateRisk from "./riskEngine";
+
 const SCAN_STEPS = [
 
     {
@@ -30,7 +32,7 @@ const SCAN_STEPS = [
     {
         status: "RUGCHECK",
         progress: 85,
-        message: "Running RugCheck Engine..."
+        message: "Running Rugfather Engine..."
     },
 
     {
@@ -48,21 +50,54 @@ export async function startScan(contractAddress = "") {
     for (const step of SCAN_STEPS) {
 
         emit("log", step.message);
+
         emit("status", step.status);
 
         await sleep(700);
 
         emit("progress", step.progress);
+
     }
 
+    /**
+     * Dummy token data.
+     *
+     * Sprint 7 nanti object ini akan berasal dari
+     * Helius + Birdeye + DexScreener.
+     */
+
+    const token = {
+
+        mintAuthority: true,
+
+        freezeAuthority: false,
+
+        liquidityLocked: false,
+
+        lpBurned: false,
+
+        creatorHolding: 38,
+
+        topHolder: 29,
+
+        ageDays: 2,
+
+        volume24h: 8200,
+
+    };
+
+    const risk = calculateRisk(token);
+
     emit("report", {
-        score: 92,
-        verdict: "SAFE",
-        liquidity: "Locked",
-        developer: "Verified",
-        holders: "Healthy Distribution"
+
+        contractAddress,
+
+        risk,
+
     });
 
     emit("status", "COMPLETE");
+
     emit("scan:finish");
+
 }
